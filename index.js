@@ -57,7 +57,7 @@ app.get('/*', async function (req, res) {
 
                 if (moves.slice(0, params.length).toString() == params.toString()) {
                     //send the next move if sent path is sequential 
-                    res.send({ move: moves[params.length] })
+                    res.send({ nextMove: moves[params.length] })
                 } else {
                     res.status(400).send({ error: "invalid move" })
                 }

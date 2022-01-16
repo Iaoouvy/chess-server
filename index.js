@@ -1,7 +1,10 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const dotenv = require('dotenv')
 const NodeCache = require("node-cache");
 const express = require('express')
+
+dotenv.config()
 const app = express()
 const myCache = new NodeCache({ stdTTL: 180 });
 
@@ -51,4 +54,4 @@ app.get('/:code', async function (req, res) {
     }
 })
 
-app.listen(3000)
+app.listen(process.env.PORT || 3000)

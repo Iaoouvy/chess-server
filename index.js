@@ -37,24 +37,39 @@ app.get('/', async function (req, res) {
         const data = await getChessData()
         res.send(data)
     } catch (error) {
-        console.error(error);
+        console.error(error)
+        res.status(400).send({ error: error.message })
     }
 })
 
-app.get('/:code', async function (req, res) {
+app.get('/*', async function (req, res) {
     try {
-        const { code } = req.params
+        const params = req.params[0].split("/").filter(n => n)
         const data = await getChessData()
-
+        const code = params.shift()
         const codeData = data.find(ele => ele.code === code)
 
-        if(codeData){
-            res.send(codeData)
+        if (codeData) {
+            if (params.length !== 0) {
+                let moves = codeData["value"].split(" ")
+                const numRegEx = new RegExp('^[0-9]$');
+                moves = moves.filter(ele => !numRegEx.test(ele)) //filter the num indexes in the string
+
+                if (moves.slice(0, params.length).toString() == params.toString()) {
+                    //send the next move if sent path is sequential 
+                    res.send({ move: moves[params.length] })
+                } else {
+                    res.status(400).send({ error: "invalid move" })
+                }
+            } else {
+                res.send(codeData)
+            }
         } else {
-            res.status(400).send({error: "invalid code"})
+            res.status(400).send({ error: "invalid code" })
         }
     } catch (error) {
-        console.error(error);
+        console.error(error)
+        res.status(400).send({ error: error.message })
     }
 })
 

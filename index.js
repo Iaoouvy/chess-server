@@ -48,7 +48,11 @@ app.get('/:code', async function (req, res) {
 
         const codeData = data.find(ele => ele.code === code)
 
-        res.send(codeData)
+        if(codeData){
+            res.send(codeData)
+        } else {
+            res.status(400).send({error: "invalid code"})
+        }
     } catch (error) {
         console.error(error);
     }
